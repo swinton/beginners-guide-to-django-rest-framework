@@ -4,14 +4,14 @@ So you're learning to use the Django Web Framework and you're loving it. But you
 
 ## Laying the foundation
 
-When working with Python applications, it's always a good idea to sandbox your development with a virtual environment. It helps prevent namespace collisions between libraries you need in your application and libraries you might already have installed on your machine, it makes it easy to install dependencies within a virtual env using the `requirements.txt` file, and lastly it makes sharing your development environment with other developers a snap.
+When working with Python applications, it's always a good idea to sandbox your development with a virtual environment. It helps prevent version collisions between libraries you need in your application and libraries you might already have installed on your machine, it makes it easy to install dependencies within a _virtual env_ using the `requirements.txt` file, and lastly it makes sharing your development environment with other developers a snap.
 
-Tuts+ has two excellent videos on how to install [virtualenv](http://code.tutsplus.com/articles/python-power-tools-virtualenv--net-31560) and [virtualenvwrapper](http://code.tutsplus.com/articles/python-power-tools-virtualenvwrapper--net-31569). Take a few minutes to walk through those videos to get virtualenv installed on your machine. If you've already got them installed, then skip the next section.
+Tuts+ has two excellent videos on how to install [virtualenv](http://code.tutsplus.com/articles/python-power-tools-virtualenv--net-31560) and [virtualenvwrapper](http://code.tutsplus.com/articles/python-power-tools-virtualenvwrapper--net-31569). Take a few minutes to walk through those videos to get virtualenv and virtualenvwrapper installed on your machine. If you've already got them installed, then skip the next section.
 
 ### Setting up your virtual environment
 
 First thing we'll do as part of our application is to set up the virtual environment. Enter the following commands in your Terminal.
-
+ 
 ```
 $ mkvirtualenv drf
 $ workon drf
@@ -32,6 +32,8 @@ Fab == [Fabric](http://docs.fabfile.org/en/1.8/), a [Python task runner](https:/
 > Fabric is a Python (2.5 or higher) library and command-line tool for streamlining the use of SSH for application deployment or systems administration tasks.
 
 While a more complete discussion about Fabric is beyond the scope of this article, I've implemented some basic fab commands which make working with this application a little easier. You've seen the `fab runserver` command. There's also the `fab shell` command which brings up an interactive iPython shell within the context of the application and the `fab syncdb` command which runs Django's syncdb command to sync changes in models to the database.
+
+[Steve: what's the benefit of using `fab` for these commands as opposed to the underlying Django commands directly? E.g. using `fab` allows you to open  a Django shell easily from any folder within your codebase / allows you to develop a consistent API for interacting with any codebase etc.]
 
 ## Working with Serialization
 
@@ -134,6 +136,7 @@ While this API view is pretty slick, it's a one for one with the database. Let's
 ```
 books = serializers.SerializerMethodField('get_books')
 ```
+[Steve: I believe there's an even easier way to serialize related models, using DRF's nested relationships, http://www.django-rest-framework.org/api-guide/relations#nested-relationships]
 
 Before we move on, let's examine this line. The serializer is clever...because we indicated which Model it should serialize, it knows everything about that model...properties, lengths, defaults, etc. Notice that we're not defining first_name, last_name, or id directly within the serializer, we're only indicating which fields should be returned to the API in the `fields` property. Try removing first_name from the list, then reload the browser window.
 
@@ -233,5 +236,7 @@ What just happened? The default API View we used only allowed get requests to th
 def post(self, *args, **kwargs):
     import pdb; pdb.set_trace()
 ```
+[Steve: did you mean to leave pdb in there?]
 
 Keep in mind that while the DRF does enforce database integrity based on the properties of the Model, we're not setting any sort of security on who can access or use this form. Diving into security, logging in, and managing permissions is outside the scope of this article, but suffice it to say that [DRF does have functionality](http://www.django-rest-framework.org/api-guide/permissions) for allowing access to the Views you've been working with, and it's fairly trivial to set up.
+[Steve: also worth pointing readers to the authentication docs: http://www.django-rest-framework.org/api-guide/authentication]
